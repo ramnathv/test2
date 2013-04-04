@@ -1,0 +1,85 @@
+---
+title : Slidify Help
+subtitle :
+author :
+job :
+framework : io2012 # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js # {highlight.js, prettify, highlight}
+hitheme : tomorrow #
+widgets : [mathjax] # {mathjax, quiz, bootstrap}
+mode : selfcontained # {standalone, draft}
+github:
+  user: EduardoClark
+  repo: SlidifyHelp
+
+--- &twocol
+### Two Columns
+
+Here I try setting up two columns using the notation from:
+  - "https://github.com/ramnathv/slidifyExamples/blob/gh-pages/examples/io2012/index.Rmd"
+
+*** =left
+
+This should say Column1
+
+*** =right
+
+This should say Column2
+
+---
+
+I used html directly but thats tiresome
+  
+<div style="float: left; width: 50%;">
+<body>
+<basefont color="black" face="Open Sans Bold" size="8">
+Column Left:<br><br>
+</div>
+
+<div style="float: right; width: 50%;">
+<body>
+Column right:<br><br>
+</div>
+
+
+
+---
+
+### GoogleVis Problem
+
+```{r, echo=FALSE, message=FALSE, results='asis', warning = F}
+require(googleVis)
+Series.Finales <- read.csv("http://dl.dropbox.com/s/2yzivoqojrjmixl/Estacionalidad.csv?token_hash=AAEIRjRu42CIPbrgceyBOVujcCSU2QP_WghKeynBbFmY5w&dl=1")
+Series.Finales <- subset(Series.Finales, Series.Finales$Original.series != "NA")
+Series.Finales$Date <- as.Date(Series.Finales$Date, format= "%m/%d/%Y")
+Ajustada <- Series.Finales$Date
+Tendencial <- Series.Finales$Date
+Ajustada <- as.data.frame(x=Ajustada)
+Tendencial <- as.data.frame(x=Tendencial)
+Ajustada$Serie <- Series.Finales$Final.seasonally.adjusted.series
+Tendencial$Serie <- Series.Finales$Final.trend.component
+Series.Finales[3] <- NULL
+Series.Finales[3] <- NULL
+colnames(Series.Finales) <- c("Date", "Value")
+colnames(Ajustada) <- c("Date", "Value")
+colnames(Tendencial) <- c("Date", "Value")
+Series.Finales$Type <- "Serie Original"
+Ajustada$Type <- "Serie Ajustada"
+Tendencial$Type <- "Serie Tendencial"
+Series.Finales <- rbind(Series.Finales, Ajustada, Tendencial)
+Series.Finales$Value <- round(Series.Finales$Value)
+A1 <- gvisAnnotatedTimeLine(Series.Finales, datevar="Date",
+                            numvar="Value", idvar="Type",
+                            options=list(gvis.language="es", displayExactValues=TRUE, colors="['green', 'blue', 'red']", alloRedraw=TRUE,
+                                         width=900, height=400, fill=10,
+                                         zoomStartTime=as.Date("2006-12-01"), max=2100, min=1000, thickness=1)
+)
+
+print(A1, tag="chart")
+
+```
+
+
+
+
+
